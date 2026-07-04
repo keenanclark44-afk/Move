@@ -12,8 +12,8 @@ export default defineConfig({
         name: 'Move',
         short_name: 'Move',
         description: 'Personal fitness & rehab tracker',
-        theme_color: '#12181A',
-        background_color: '#12181A',
+        theme_color: '#12151A',
+        background_color: '#FFFFFF',
         display: 'standalone',
         start_url: '/',
         icons: [
