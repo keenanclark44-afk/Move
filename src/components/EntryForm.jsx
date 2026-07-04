@@ -10,6 +10,15 @@ function emptyForm() {
     notes: '',
     score: '',
     feeling: '',
+    venue: '',
+    result: '',
+    goalsScored: '',
+    assists: '',
+    stamina: '',
+    confidence: '',
+    touch: '',
+    dryMouth: '',
+    wentInGoal: '',
     planId: '',
     ankle: false,
     calf: false,
@@ -41,6 +50,15 @@ export default function EntryForm({ category, isMatch, onSaved }) {
       notes: form.notes,
       score: isMatch ? form.score || null : null,
       feeling: isMatch ? form.feeling || null : null,
+      venue: isMatch ? form.venue || null : null,
+      result: isMatch ? form.result || null : null,
+      goalsScored: isMatch && form.goalsScored !== '' ? Number(form.goalsScored) : null,
+      assists: isMatch && form.assists !== '' ? Number(form.assists) : null,
+      stamina: isMatch && form.stamina !== '' ? Number(form.stamina) : null,
+      confidence: isMatch && form.confidence !== '' ? Number(form.confidence) : null,
+      touch: isMatch && form.touch !== '' ? Number(form.touch) : null,
+      dryMouth: isMatch ? form.dryMouth || null : null,
+      wentInGoal: isMatch ? form.wentInGoal || null : null,
       painFlags: { ankle: form.ankle, calf: form.calf, shin: form.shin }
     })
     setForm(emptyForm())
@@ -78,13 +96,70 @@ export default function EntryForm({ category, isMatch, onSaved }) {
       </label>
 
       {isMatch && (
-        <div style={{ display: 'flex', gap: 8 }}>
+        <>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <label style={fieldStyle}>
+              Venue
+              <input value={form.venue} onChange={e => update('venue', e.target.value)} style={inputStyle} />
+            </label>
+            <label style={fieldStyle}>
+              Result
+              <select value={form.result} onChange={e => update('result', e.target.value)} style={inputStyle}>
+                <option value="">—</option>
+                <option value="win">Win</option>
+                <option value="loss">Loss</option>
+                <option value="draw">Draw</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </label>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            <label style={fieldStyle}>
+              Score
+              <input placeholder="e.g. 3-1" value={form.score} onChange={e => update('score', e.target.value)} style={inputStyle} />
+            </label>
+            <label style={fieldStyle}>
+              Goals
+              <input type="number" value={form.goalsScored} onChange={e => update('goalsScored', e.target.value)} style={inputStyle} />
+            </label>
+            <label style={fieldStyle}>
+              Assists
+              <input type="number" value={form.assists} onChange={e => update('assists', e.target.value)} style={inputStyle} />
+            </label>
+          </div>
+
+          <div>
+            <div style={{ fontSize: 13, color: 'var(--text-dim)', marginBottom: 6 }}>Ratings (1-10)</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <label style={fieldStyle}>
+                Stamina
+                <input type="number" min="1" max="10" value={form.stamina} onChange={e => update('stamina', e.target.value)} style={inputStyle} />
+              </label>
+              <label style={fieldStyle}>
+                Confidence
+                <input type="number" min="1" max="10" value={form.confidence} onChange={e => update('confidence', e.target.value)} style={inputStyle} />
+              </label>
+              <label style={fieldStyle}>
+                Touch
+                <input type="number" min="1" max="10" value={form.touch} onChange={e => update('touch', e.target.value)} style={inputStyle} />
+              </label>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            <label style={fieldStyle}>
+              Dry mouth?
+              <input placeholder="e.g. Yes / Improved" value={form.dryMouth} onChange={e => update('dryMouth', e.target.value)} style={inputStyle} />
+            </label>
+            <label style={fieldStyle}>
+              Went in goal?
+              <input placeholder="e.g. No / Twice" value={form.wentInGoal} onChange={e => update('wentInGoal', e.target.value)} style={inputStyle} />
+            </label>
+          </div>
+
           <label style={fieldStyle}>
-            Score
-            <input placeholder="e.g. 3-1" value={form.score} onChange={e => update('score', e.target.value)} style={inputStyle} />
-          </label>
-          <label style={fieldStyle}>
-            How it felt
+            How it felt overall
             <select value={form.feeling} onChange={e => update('feeling', e.target.value)} style={inputStyle}>
               <option value="">—</option>
               <option value="great">Great</option>
@@ -93,7 +168,7 @@ export default function EntryForm({ category, isMatch, onSaved }) {
               <option value="poor">Poor</option>
             </select>
           </label>
-        </div>
+        </>
       )}
 
       {plans.length > 0 && (

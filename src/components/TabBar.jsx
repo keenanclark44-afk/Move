@@ -2,7 +2,8 @@ const TABS = [
   { key: 'general', label: 'General', color: 'var(--ink)' },
   { key: 'match', label: 'Matches', color: 'var(--blue)' },
   { key: 'gym', label: 'Gym', color: 'var(--red)' },
-  { key: 'training', label: 'Training', color: 'var(--yellow)' }
+  { key: 'training', label: 'Training', color: 'var(--yellow)' },
+  { key: 'padel', label: 'Padel', color: 'var(--teal)' }
 ]
 
 export default function TabBar({ active, onChange }) {

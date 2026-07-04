@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { addMetric, listMetrics, addPhoto, listPhotos, deletePhoto } from '../db.js'
 import GarminPanel from '../components/GarminPanel.jsx'
+import InjuryLog from '../components/InjuryLog.jsx'
+import SupplementsList from '../components/SupplementsList.jsx'
+import GoalsTracker from '../components/GoalsTracker.jsx'
+import ImportTracker from '../components/ImportTracker.jsx'
 
 const METRIC_LABELS = { vo2max: 'VO2 max', sleep: 'Sleep (hrs)', weight: 'Weight (kg)' }
 
@@ -83,6 +87,11 @@ export default function GeneralView({ entries, onChange }) {
           ))}
         </div>
       </div>
+
+      <InjuryLog />
+      <SupplementsList />
+      <GoalsTracker />
+      <ImportTracker onChange={onChange} />
 
       <div className="card">
         <div style={{ fontSize: 13, color: 'var(--text-dim)', marginBottom: 10 }}>

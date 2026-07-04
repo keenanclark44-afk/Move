@@ -11,6 +11,7 @@
   --blue: #1E4FD8;
   --red: #E8362E;
   --yellow: #F5C518;
+  --teal: #0F9B8E; /* placeholder accent for Padel — final palette pass pending */
   --pain: #E8362E;
   --line: #12151A;
 
@@ -81,6 +82,7 @@ button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .badge-match { background: var(--blue); color: #FFFFFF; }
 .badge-gym { background: var(--red); color: #FFFFFF; }
 .badge-training { background: var(--yellow); color: var(--ink); }
+.badge-padel { background: var(--teal); color: #FFFFFF; }
 .badge-general { background: var(--ink); color: #FFFFFF; }
 
 .tab-bar {

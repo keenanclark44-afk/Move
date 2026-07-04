@@ -4,7 +4,7 @@ import TabBar from './components/TabBar.jsx'
 import GeneralView from './views/GeneralView.jsx'
 import SessionView from './views/SessionView.jsx'
 
-const TITLES = { general: 'Overview', match: 'Football Matches', gym: 'Gym', training: 'Football Training' }
+const TITLES = { general: 'Overview', match: 'Football Matches', gym: 'Gym', training: 'Football Training', padel: 'Padel' }
 
 export default function App() {
   const [tab, setTab] = useState('general')
