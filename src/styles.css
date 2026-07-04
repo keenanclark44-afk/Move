@@ -1,17 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg: #12181A;
-  --surface: #1B2422;
-  --surface-raised: #212B28;
-  --text: #E8ECE9;
-  --text-dim: #8FA098;
-  --amber: #D8A34E;
-  --teal: #4C8577;
-  --pain: #C1554A;
-  --line: #2A342F;
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-raised: #F4F4F2;
+  --ink: #12151A;
+  --text: #12151A;
+  --text-dim: #6B7280;
 
-  --font-display: 'Fraunces', serif;
+  --blue: #1E4FD8;
+  --red: #E8362E;
+  --yellow: #F5C518;
+  --pain: #E8362E;
+  --line: #12151A;
+
+  --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
@@ -37,7 +40,7 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h3 { font-family: var(--font-display); margin: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; margin: 0; }
 
 .stat {
   font-family: var(--font-mono);
@@ -54,21 +57,62 @@ button {
   transition: transform 0.1s ease, opacity 0.15s ease;
 }
 button:active { transform: scale(0.97); }
-button:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 
-.btn-primary { background: var(--amber); color: #12181A; }
-.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.btn-primary { background: var(--ink); color: #FFFFFF; }
+.btn-ghost { background: transparent; color: var(--text); border: 2px solid var(--line); }
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--radius);
   padding: 18px;
 }
 
-.pitch-ring {
-  border-bottom: 2px dashed var(--line);
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
 }
+.badge-match { background: var(--blue); color: #FFFFFF; }
+.badge-gym { background: var(--red); color: #FFFFFF; }
+.badge-training { background: var(--yellow); color: var(--ink); }
+.badge-general { background: var(--ink); color: #FFFFFF; }
+
+.tab-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: #FFFFFF;
+  border-top: 2px solid var(--line);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border-radius: 10px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.tab-btn .tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+.tab-btn.active { color: var(--ink); }
+.tab-btn.active .tab-dot { background: var(--tab-color, var(--ink)); }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

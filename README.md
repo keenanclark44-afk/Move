@@ -1,7 +1,7 @@
 # Move — personal training & rehab tracker
 
-Installable PWA. One `entries` schema, three ways in: manual form, live Garmin
-sync (session-based, re-auth on expiry), and screenshot parsing (phase 2).
+Installable PWA with four tabs (General, Football Matches, Gym, Football
+Training), manual entry logging, and live Garmin sync.
 
 ## What's built
 
@@ -9,33 +9,34 @@ sync (session-based, re-auth on expiry), and screenshot parsing (phase 2).
   via `vite-plugin-pwa`)
 - Local-first storage: every entry writes to IndexedDB immediately, so the
   app works offline and never blocks on network
+- Tab structure: General (health overview: VO2 max/sleep/weight, progress
+  photos, rolling summary of the last 5 sessions across all tabs), Football
+  Matches (score + how-it-felt + intensity-vs-last-match), Gym, and Football
+  Training — all sharing one `entries` store with a `category` field
+- Workout plans library (`plans` store) — save a plan per category, link it
+  to a logged session via `planId`
 - Garmin panel: connect → session token (6hr) → sync now → auto-prompts
   reconnect when the session expires. Nothing long-lived is stored.
+- `/api/garmin/auth` and `/api/garmin/sync` — wired to the real
+  [`garmin-connect`](https://www.npmjs.com/package/garmin-connect) npm
+  package. Login exchanges Garmin OAuth1/OAuth2 tokens into a signed JWT;
+  sync restores that session and pulls recent activities. Note:
+  `garmin-connect` doesn't yet support MFA-enabled Garmin accounts.
 - Manual entry form with pain flags (ankle/calf/shin) as first-class fields
-- `/api/garmin/auth` and `/api/garmin/sync` — serverless function **stubs**.
-  The scaffolding, token handling, and error paths are wired up; the actual
-  Garmin API calls need one of the two options below.
 
 ## What's not done yet (needs your call)
 
-1. **Garmin backend implementation.** No official consumer API exists — every
-   working integration uses one of:
-   - [`garth`](https://github.com/matin/garth) (Python) — lightweight, most
-     Garmin MCP projects use this
-   - [`garmin-connect`](https://www.npmjs.com/package/garmin-connect) (Node) —
-     keeps everything in one language if you want pure JS/TS
-
-   Node keeps this a single-language repo (simpler on Vercel). Python needs a
-   small separate service (e.g. a Vercel Python function) that the Node API
-   routes call into. I'd lean Node for this given the rest of the stack —
-   happy to wire it up once you confirm.
-
-2. **Screenshot parsing endpoint** — `/api/parse-screenshot`, calls the
+1. **Screenshot parsing endpoint** — `/api/parse-screenshot`, calls the
    Claude API with the image, returns a normalized entry. Not built yet;
    slots into the same `db.js` shape when you're ready for phase 2.
 
-3. **Supabase connection** — `schema.sql` is ready to run, but the client
-   doesn't push to it yet. Right now entries only live in IndexedDB on-device.
+2. **Supabase connection** — `schema.sql` is ready to run (entries, plans,
+   metrics), but the client doesn't push to it yet. Right now entries only
+   live in IndexedDB on-device. Progress photos are intentionally
+   device-only and never sync to Supabase.
+
+3. **Historical Excel import** — `Football_Fitness_Tracker.xlsx` import via
+   Google Drive connector, once available.
 
 ## Deploying
 
@@ -55,7 +56,8 @@ npm run dev          # local dev server
 
 ## Design tokens
 
-Charcoal-green base (`#12181A`), amber for readiness (`#D8A34E`), teal for
-HR/zone data (`#4C8577`), warm red reserved only for pain flags (`#C1554A`)
-so it never blends into the rest of the data. Fraunces for numbers/headers,
-Inter for body, IBM Plex Mono for stats.
+Bold white base with a primary red/blue/yellow palette: blue for Football
+Matches, red for Gym (and pain flags), yellow for Football Training, ink
+black for General and primary actions — graphic and high-contrast rather
+than moody. Space Grotesk for numbers/headers, Inter for body, IBM Plex Mono
+for stats.

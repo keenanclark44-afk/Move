@@ -4,15 +4,15 @@ Personal fitness/rehab tracker PWA. React \+ Vite frontend, Vercel serverless ba
 
 ## Status
 
-v1 deployed and working: manual entry logging, offline storage, installable PWA. Garmin connect button is a stub (api/garmin/auth.js, api/garmin/sync.js need the real `garmin-connect` npm package wired in — no official API exists, this is the standard community approach).
+v2 built: bold red/blue/yellow/white theme, 4-tab structure (General/Matches/Gym/Training), `category` field on entries, `plans` library with `planId` linking, manual health metrics + device-only progress photos on the General tab. Garmin backend (api/garmin/auth.js, api/garmin/sync.js) is wired to the real `garmin-connect` npm package — login/sync work, but that library doesn't yet support MFA-enabled Garmin accounts. Still open: screenshot-parsing endpoint (phase 2), pushing entries to Supabase (schema.sql is ready but unused), and the historical Excel import below.
 
-## v2 redesign — in progress, not yet built
+## v2 redesign — reference (implemented)
 
 **Visual direction:** moving away from the dark "pitch-at-dusk" theme to a bold primary palette — red, blue, yellow, white. Graphic, striking, high contrast rather than moody.
 
 **New tab structure** (replaces single flat entry list):
 
-- **General** — health overview: VO2 max trend (%, from Garmin), sleep, weight, progress photos (monthly). Also shows a rolling summary from the last 3–5 sessions across ALL tabs, to give an at-a-glance "where am I at."  
+- **General** — health overview: VO2 max, sleep, weight (manual entry for now — Garmin only supplies activity data today, not daily wellness metrics), progress photos (device-only, stored in IndexedDB). Also shows a rolling summary from the last 5 sessions across ALL tabs, to give an at-a-glance "where am I at."  
 - **Football Matches** — match logs: score, how the match felt, Garmin stats (HR, intensity vs last match — more or less intense than previous).  
 - **Gym** — cardio \+ strength sessions, same log structure as Football Matches.  
 - **Football Training** — freestyle, dribbling, cones, ball-work sessions. Distinct from Matches (lower intensity, skill-focused, but still worth tracking HR/duration and any pain flags).

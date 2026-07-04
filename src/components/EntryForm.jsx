@@ -1,20 +1,30 @@
-import { useState } from 'react'
-import { addEntry } from '../db.js'
+import { useState, useEffect } from 'react'
+import { addEntry, listPlans } from '../db.js'
 
-const emptyForm = {
-  date: new Date().toISOString().slice(0, 10),
-  durationMin: '',
-  distanceKm: '',
-  avgHr: '',
-  notes: '',
-  ankle: false,
-  calf: false,
-  shin: false
+function emptyForm() {
+  return {
+    date: new Date().toISOString().slice(0, 10),
+    durationMin: '',
+    distanceKm: '',
+    avgHr: '',
+    notes: '',
+    score: '',
+    feeling: '',
+    planId: '',
+    ankle: false,
+    calf: false,
+    shin: false
+  }
 }
 
-export default function EntryForm({ onSaved }) {
+export default function EntryForm({ category, isMatch, onSaved }) {
   const [form, setForm] = useState(emptyForm)
   const [open, setOpen] = useState(false)
+  const [plans, setPlans] = useState([])
+
+  useEffect(() => {
+    if (open) listPlans(category).then(setPlans)
+  }, [open, category])
 
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }))
 
@@ -23,13 +33,17 @@ export default function EntryForm({ onSaved }) {
     await addEntry({
       date: form.date,
       source: 'manual',
+      category,
+      planId: form.planId || null,
       durationMin: Number(form.durationMin) || 0,
       distanceKm: Number(form.distanceKm) || 0,
       avgHr: Number(form.avgHr) || 0,
       notes: form.notes,
+      score: isMatch ? form.score || null : null,
+      feeling: isMatch ? form.feeling || null : null,
       painFlags: { ankle: form.ankle, calf: form.calf, shin: form.shin }
     })
-    setForm(emptyForm)
+    setForm(emptyForm())
     setOpen(false)
     onSaved?.()
   }
@@ -63,6 +77,35 @@ export default function EntryForm({ onSaved }) {
         <input type="number" value={form.avgHr} onChange={e => update('avgHr', e.target.value)} style={inputStyle} />
       </label>
 
+      {isMatch && (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <label style={fieldStyle}>
+            Score
+            <input placeholder="e.g. 3-1" value={form.score} onChange={e => update('score', e.target.value)} style={inputStyle} />
+          </label>
+          <label style={fieldStyle}>
+            How it felt
+            <select value={form.feeling} onChange={e => update('feeling', e.target.value)} style={inputStyle}>
+              <option value="">—</option>
+              <option value="great">Great</option>
+              <option value="good">Good</option>
+              <option value="ok">OK</option>
+              <option value="poor">Poor</option>
+            </select>
+          </label>
+        </div>
+      )}
+
+      {plans.length > 0 && (
+        <label style={fieldStyle}>
+          Plan used (optional)
+          <select value={form.planId} onChange={e => update('planId', e.target.value)} style={inputStyle}>
+            <option value="">—</option>
+            {plans.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
+      )}
+
       <div>
         <div style={{ fontSize: 13, color: 'var(--text-dim)', marginBottom: 6 }}>Pain flags</div>
         <div style={{ display: 'flex', gap: 14 }}>
@@ -88,12 +131,13 @@ export default function EntryForm({ onSaved }) {
   )
 }
 
-const fieldStyle = { display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: 'var(--text-dim)', flex: 1 }
+const fieldStyle = { display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: 'var(--text-dim)', flex: 1, minWidth: 0 }
 const inputStyle = {
   background: 'var(--surface-raised)',
-  border: '1px solid var(--line)',
+  border: '2px solid var(--line)',
   borderRadius: 8,
   color: 'var(--text)',
+  width: '100%',
   padding: '10px 12px',
   fontSize: 15,
   fontFamily: 'inherit'

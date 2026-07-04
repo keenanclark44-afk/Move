@@ -5,7 +5,7 @@ import { addEntry } from '../db.js'
 export default function GarminPanel({ onSynced }) {
   const [connected, setConnected] = useState(isConnected())
   const [showLogin, setShowLogin] = useState(false)
-  const [creds, setCreds] = useState({ email: '', password: '', mfaCode: '' })
+  const [creds, setCreds] = useState({ email: '', password: '' })
   const [status, setStatus] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -14,10 +14,10 @@ export default function GarminPanel({ onSynced }) {
     setBusy(true)
     setStatus('')
     try {
-      await connect(creds.email, creds.password, creds.mfaCode)
+      await connect(creds.email, creds.password)
       setConnected(true)
       setShowLogin(false)
-      setCreds({ email: '', password: '', mfaCode: '' })
+      setCreds({ email: '', password: '' })
     } catch (err) {
       setStatus(err.message)
     } finally {
@@ -76,8 +76,6 @@ export default function GarminPanel({ onSynced }) {
             onChange={e => setCreds(c => ({ ...c, email: e.target.value }))} style={inputStyle} />
           <input placeholder="Password" type="password" value={creds.password}
             onChange={e => setCreds(c => ({ ...c, password: e.target.value }))} style={inputStyle} />
-          <input placeholder="MFA code (if enabled)" value={creds.mfaCode}
-            onChange={e => setCreds(c => ({ ...c, mfaCode: e.target.value }))} style={inputStyle} />
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="submit" className="btn-primary" disabled={busy} style={{ flex: 1 }}>
               {busy ? 'Connecting…' : 'Connect'}
