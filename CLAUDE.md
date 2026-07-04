@@ -4,7 +4,7 @@ Personal fitness/rehab tracker PWA. React \+ Vite frontend, Vercel serverless ba
 
 ## Status
 
-v2 built: bold red/blue/yellow/white theme, 4-tab structure (General/Matches/Gym/Training), `category` field on entries, `plans` library with `planId` linking, manual health metrics + device-only progress photos on the General tab. Garmin backend (api/garmin/auth.js, api/garmin/sync.js) is wired to the real `garmin-connect` npm package — login/sync work, but that library doesn't yet support MFA-enabled Garmin accounts. Still open: screenshot-parsing endpoint (phase 2), pushing entries to Supabase (schema.sql is ready but unused), and the historical Excel import below.
+v2 built: bold red/blue/yellow/white theme, 5-tab structure (General/Matches/Gym/Training/Padel — Padel's teal accent is a placeholder pending a real palette pass), `category` field on entries, `plans` library with `planId` linking, manual health metrics + device-only progress photos on the General tab. Match entries also carry venue/result/goalsScored/assists/stamina/confidence/touch/dryMouth/wentInGoal. Three new IndexedDB stores — `injuries`, `supplements`, `goals` — each with a collapsible card on the General tab. Garmin backend (api/garmin/auth.js, api/garmin/sync.js) is wired to the real `garmin-connect` npm package — login/sync work (verified against a live account), but that library doesn't yet support MFA-enabled Garmin accounts; it also only exposes activities, not VO2 max/wellness data (untested whether that's reachable via the same session tokens). A client-side `.xlsx` importer (`ImportTracker.jsx`, lazy-loaded) parses the user's real `Football_Fitness_Tracker.xlsx` into all of the above — verified end-to-end against the actual file, but the user still needs to run the import themselves on each device (IndexedDB is local-first, per-device — there's no server-side shortcut). Still open: screenshot-parsing endpoint (phase 2), pushing entries to Supabase (schema.sql is ready but unused), a real design/logo pass (explicitly deferred by the user), and a possible future Playtomic integration for Padel (mentioned as an idea, not scoped).
 
 ## v2 redesign — reference (implemented)
 
@@ -16,12 +16,11 @@ v2 built: bold red/blue/yellow/white theme, 4-tab structure (General/Matches/Gym
 - **Football Matches** — match logs: score, how the match felt, Garmin stats (HR, intensity vs last match — more or less intense than previous).  
 - **Gym** — cardio \+ strength sessions, same log structure as Football Matches.  
 - **Football Training** — freestyle, dribbling, cones, ball-work sessions. Distinct from Matches (lower intensity, skill-focused, but still worth tracking HR/duration and any pain flags).
+- **Padel** — same generic session log as Gym/Training. User is on Playtomic for padel bookings/stats — possible future integration, not scoped yet.
 
-**Schema change needed:** entries need a `category` field (`match | gym | training | general`) alongside the existing shared fields (date, duration, distance, avgHr, hrZones, painFlags, notes, source).
+**Workout plans:** `plans` entity — a library of saved workout plans. Each plan can be linked to a logged session (session gets a `planId` reference) so you can see "this session was Plan X" and track adherence over time.
 
-**Workout plans:** new `plans` entity — a library of saved workout plans. Each plan can be linked to a logged session (session gets a `planId` reference) so you can see "this session was Plan X" and track adherence over time.
-
-**Historical data import:** user has an existing Excel tracker (Football\_Fitness\_Tracker.xlsx, 6 tabs) with match/session history that should be imported as the foundational dataset once available via Google Drive connector.
+**Historical data import:** done. The user's real Excel tracker (Football\_Fitness\_Tracker.xlsx, 6 tabs) is imported via the in-app importer on the General tab. Three of its six sheets didn't fit the original schema at all (Injury & Recovery, Supplements & Recovery, Goals & Progression) and are now first-class features rather than a lossy notes dump.
 
 ## Design constraints
 
